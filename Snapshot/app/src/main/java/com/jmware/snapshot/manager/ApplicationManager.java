@@ -4,7 +4,6 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.preference.PreferenceManager;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -18,7 +17,7 @@ public class ApplicationManager extends Application {
 
     private Bitmap capturedImage;
 
-    private ArrayList<SavedImage> savedImages;
+    private ArrayList<SavedImage> savedImages = new ArrayList<>();
 
     public void saveData() {
         SharedPreferences preferences = getSharedPreferences("SSSavedData", Context.MODE_PRIVATE);

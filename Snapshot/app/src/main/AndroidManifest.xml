@@ -17,7 +17,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".activity.CameraActivity"
+            android:name=".activity.LaunchActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,8 +25,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.SaveOptionsActivity" />
-        <activity android:name=".activity.PhotoLibraryActivity" />
+        <activity
+            android:name=".activity.CameraActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.SaveOptionsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.PhotoLibraryActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activity.SaveTimeActivity" />
+        <activity android:name=".activity.SaveDateActivity"></activity>
     </application>
 
 </manifest>

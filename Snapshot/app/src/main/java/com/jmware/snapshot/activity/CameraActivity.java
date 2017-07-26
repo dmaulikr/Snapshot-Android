@@ -1,25 +1,30 @@
 package com.jmware.snapshot.activity;
 
+import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.provider.MediaStore;
-import android.support.v4.app.FragmentManager;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.jmware.snapshot.R;
 import com.jmware.snapshot.manager.ApplicationManager;
 
 public class CameraActivity extends AppCompatActivity {
 
-    private static int REQUEST_IMAGE_CAPTURE = 1;
+    private final int PERMISSION_REQUEST_CAMERA = 1;
+
+    private final int REQUEST_IMAGE_CAPTURE = 2;
 
     private Button photoLibraryBarButton;
 
@@ -80,9 +85,11 @@ public class CameraActivity extends AppCompatActivity {
 
     private void onTakePhotoButtonClick(Button button) {
         if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
-            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            if (intent.resolveActivity(getPackageManager()) != null) {
-                startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
+            if (checkCameraPermission()) {
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                if (intent.resolveActivity(getPackageManager()) != null) {
+                    startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
+                }
             }
         } else {
             new AlertDialog.Builder(this)
@@ -92,6 +99,31 @@ public class CameraActivity extends AppCompatActivity {
                         public void onClick(DialogInterface dialog, int id) {}
                     })
                     .show();
+        }
+    }
+
+    private boolean checkCameraPermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
+                Toast.makeText(this, "Provide permission to access camera.", Toast.LENGTH_SHORT).show();
+            } else {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, PERMISSION_REQUEST_CAMERA);
+            }
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+        if (requestCode == PERMISSION_REQUEST_CAMERA) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                if (intent.resolveActivity(getPackageManager()) != null) {
+                    startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
+                }
+            }
         }
     }
 
