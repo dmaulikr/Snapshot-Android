@@ -19,8 +19,8 @@ public class LaunchActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent mainIntent = new Intent(LaunchActivity.this, CameraActivity.class);
-                LaunchActivity.this.startActivity(mainIntent);
+                Intent intent = new Intent(LaunchActivity.this, CameraActivity.class);
+                LaunchActivity.this.startActivity(intent);
                 LaunchActivity.this.finish();
             }
         }, LAUNCH_SCREEN_DISPLAY_LENGTH);
