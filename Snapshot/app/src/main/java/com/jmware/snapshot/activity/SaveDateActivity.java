@@ -16,7 +16,10 @@ import com.jmware.snapshot.fragment.DatePickerFragment;
 import com.jmware.snapshot.fragment.TimePickerFragment;
 import com.jmware.snapshot.manager.ApplicationManager;
 
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.Locale;
 
 public class SaveDateActivity extends AppCompatActivity {
 
@@ -30,7 +33,15 @@ public class SaveDateActivity extends AppCompatActivity {
 
     private Button confirmButton;
 
-    private Date dateSet;
+    private int year;
+
+    private int month;
+
+    private int day;
+
+    private int hours;
+
+    private int minutes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +49,7 @@ public class SaveDateActivity extends AppCompatActivity {
         setContentView(R.layout.activity_save_date);
         initializeViews();
         setupActions();
+        setInitialDateTime();
     }
 
     private void initializeViews() {
@@ -85,7 +97,8 @@ public class SaveDateActivity extends AppCompatActivity {
     private void onConfirmButtonClick(Button button) {
         ApplicationManager app = (ApplicationManager) getApplication();
         if (app.getCapturedImage() != null) {
-            SavedImage savedImage = new SavedImage(app.getCapturedImage(), dateSet);
+            Date expireDate = new GregorianCalendar(year, month, day, hours, minutes).getTime();
+            SavedImage savedImage = new SavedImage(app.getCapturedImage(), expireDate);
             app.addSavedImage(savedImage);
         }
         Intent intent = new Intent(this, CameraActivity.class);
@@ -93,12 +106,52 @@ public class SaveDateActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void setDate(Date date) {
-        dateSet = date;
+    private void setInitialDateTime() {
+        Calendar calendar = Calendar.getInstance();
+        year = calendar.get(Calendar.YEAR);
+        month = calendar.get(Calendar.MONTH);
+        day = calendar.get(Calendar.DAY_OF_MONTH);
+        hours = calendar.get(Calendar.HOUR_OF_DAY);
+        minutes = calendar.get(Calendar.MINUTE);
+        String amPm;
+        if (hours == 0) {
+            hours = 12;
+            amPm = "AM";
+        } else if (hours < 12) {
+            amPm = "AM";
+        } else if (hours == 12) {
+            amPm = "PM";
+        } else {
+            hours -= 12;
+            amPm = "PM";
+        }
+        dateLabel.setText(String.format(Locale.getDefault(), "%d/%d/%d", month, day, year));
+        timeLabel.setText(String.format(Locale.getDefault(), "%d:%02d %s", hours, minutes, amPm));
     }
 
-    public void setTime() {
+    public void setDate(int year, int month, int day) {
+        this.year = year;
+        this.month = month;
+        this.day = day;
+        dateLabel.setText(String.format(Locale.getDefault(), "%d/%d/%d", month, day, year));
+    }
 
+    public void setTime(int hours, int minutes) {
+        String amPm;
+        if (hours == 0) {
+            hours = 12;
+            amPm = "AM";
+        } else if (hours < 12) {
+            amPm = "AM";
+        } else if (hours == 12) {
+            amPm = "PM";
+        } else {
+            hours -= 12;
+            amPm = "PM";
+        }
+        this.hours = hours;
+        this.minutes = minutes;
+        timeLabel.setText(String.format(Locale.getDefault(), "%d:%02d %s", hours, minutes, amPm));
     }
 
     @Override

@@ -27,8 +27,7 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
     @Override
     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
         SaveDateActivity activity = (SaveDateActivity) getActivity();
-        Date date = new GregorianCalendar(year, month, day).getTime();
-        activity.setDate(date);
+        activity.setDate(year, month, day);
     }
 
 }
