@@ -2,6 +2,7 @@ package com.jmware.snapshot.util;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
@@ -31,9 +32,29 @@ public class PhotoGridAdapter extends ArrayAdapter<SavedImage> {
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.grid_item_photo, parent, false);
         }
-        ImageView image = convertView.findViewById(R.id.photo_image);
-        image.setImageBitmap(savedImage.getImage());
+        ImageView imageView = convertView.findViewById(R.id.photo_image);
+        Bitmap editedImage = formatSquareImage(savedImage.getImage());
+        imageView.setImageBitmap(editedImage);
         return convertView;
+    }
+
+    private Bitmap formatSquareImage(Bitmap image) {
+        int x = 0;
+        int y = 0;
+        int width;
+        int height;
+        if (image.getWidth() == image.getHeight()) {
+            return image;
+        } else if (image.getWidth() < image.getHeight()) {
+            y = (image.getHeight() - image.getWidth()) / 2;
+            width = image.getWidth();
+            height = image.getWidth();
+        } else {
+            x = (image.getWidth() - image.getHeight()) / 2;
+            width = image.getHeight();
+            height = image.getHeight();
+        }
+        return Bitmap.createBitmap(image, x, y, width, height);
     }
 
 }

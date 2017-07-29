@@ -48,7 +48,8 @@ public class SaveOptionsActivity extends AppCompatActivity {
     }
 
     private void onSaveTimeButtonClick(Button button) {
-
+        Intent intent = new Intent(this, SaveTimeActivity.class);
+        startActivity(intent);
     }
 
     private void onSaveDateButtonClick(Button button) {
