@@ -19,7 +19,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_gravity="bottom"
-            android:layout_marginRight="20dp"
+            android:layout_marginRight="30dp"
             android:layout_weight="0.5" />
 
         <NumberPicker
@@ -27,7 +27,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_gravity="bottom"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="30dp"
             android:layout_weight="0.5" />
 
     </LinearLayout>

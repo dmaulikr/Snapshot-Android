@@ -1,6 +1,7 @@
 package com.jmware.snapshot.util;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.annotation.LayoutRes;
@@ -8,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -21,8 +23,11 @@ import java.util.List;
 
 public class PhotoGridAdapter extends ArrayAdapter<SavedImage> {
 
+    private Activity activity;
+
     public PhotoGridAdapter(Activity activity, ArrayList<SavedImage> savedImages) {
         super(activity, 0, savedImages);
+        this.activity = activity;
     }
 
     @NonNull
@@ -35,8 +40,36 @@ public class PhotoGridAdapter extends ArrayAdapter<SavedImage> {
         ImageView imageView = convertView.findViewById(R.id.photo_image);
         Bitmap editedImage = formatSquareImage(savedImage.getImage());
         imageView.setImageBitmap(editedImage);
+        convertView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onImageClick(savedImage.getImage());
+            }
+        });
         return convertView;
     }
+
+    private void onImageClick(Bitmap image) {
+        final Dialog dialog = new Dialog(activity);
+        dialog.setTitle("photoViewer");
+        dialog.setContentView(R.layout.dialog_photo_view);
+        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
+        layoutParams.copyFrom(dialog.getWindow().getAttributes());
+        layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
+        layoutParams.height = WindowManager.LayoutParams.MATCH_PARENT;
+        ImageView photoImage = dialog.findViewById(R.id.photo_image);
+        photoImage.setImageBitmap(image);
+        Button closeButton = dialog.findViewById(R.id.close_button);
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+        dialog.getWindow().setAttributes(layoutParams);
+    }
+
 
     private Bitmap formatSquareImage(Bitmap image) {
         int x = 0;
