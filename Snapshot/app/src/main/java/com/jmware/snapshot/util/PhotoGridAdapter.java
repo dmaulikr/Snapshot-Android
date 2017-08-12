@@ -6,6 +6,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,13 +44,13 @@ public class PhotoGridAdapter extends ArrayAdapter<SavedImage> {
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onImageClick(savedImage.getImage());
+                onImageClick(savedImage);
             }
         });
         return convertView;
     }
 
-    private void onImageClick(Bitmap image) {
+    private void onImageClick(SavedImage savedImage) {
         final Dialog dialog = new Dialog(activity);
         dialog.setTitle("photoViewer");
         dialog.setContentView(R.layout.dialog_photo_view);
@@ -58,7 +59,10 @@ public class PhotoGridAdapter extends ArrayAdapter<SavedImage> {
         layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
         layoutParams.height = WindowManager.LayoutParams.MATCH_PARENT;
         ImageView photoImage = dialog.findViewById(R.id.photo_image);
-        photoImage.setImageBitmap(image);
+        photoImage.setImageBitmap(savedImage.getImage());
+        TextView expireDate = dialog.findViewById(R.id.expire_date);
+        String dateString = "Expires: " + DateFormat.format("MM/dd/yy - h:mm a", savedImage.getExpireDate());
+        expireDate.setText(dateString);
         Button closeButton = dialog.findViewById(R.id.close_button);
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
