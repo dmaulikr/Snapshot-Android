@@ -11,6 +11,7 @@ import com.jmware.snapshot.data.SavedImage;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class ApplicationManager extends Application {
@@ -35,6 +36,14 @@ public class ApplicationManager extends Application {
         if (!savedImageJSON.isEmpty()) {
             Type type = new TypeToken<List<SavedImage>>() {}.getType();
             savedImages = gson.fromJson(savedImageJSON, type);
+        }
+    }
+
+    public void checkExpiredImages() {
+        for (int i = savedImages.size() - 1; i >= 0; i--) {
+            if (savedImages.get(i).getExpireDate().before(Calendar.getInstance().getTime())) {
+                savedImages.remove(i);
+            }
         }
     }
 

@@ -42,6 +42,13 @@ public class CameraActivity extends AppCompatActivity {
         setupActions();
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        ApplicationManager app = (ApplicationManager) getApplication();
+        app.checkExpiredImages();
+    }
+
     private void initializeViews() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

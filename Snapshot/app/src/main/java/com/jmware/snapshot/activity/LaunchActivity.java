@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.jmware.snapshot.R;
+import com.jmware.snapshot.manager.ApplicationManager;
 
 public class LaunchActivity extends AppCompatActivity {
 
@@ -19,6 +20,8 @@ public class LaunchActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
+                ApplicationManager app = (ApplicationManager) getApplication();
+                app.loadData();
                 Intent intent = new Intent(LaunchActivity.this, CameraActivity.class);
                 LaunchActivity.this.startActivity(intent);
                 LaunchActivity.this.finish();

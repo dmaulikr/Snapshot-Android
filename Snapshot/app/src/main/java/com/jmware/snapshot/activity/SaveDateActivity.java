@@ -100,6 +100,7 @@ public class SaveDateActivity extends AppCompatActivity {
             Date expireDate = new GregorianCalendar(year, month, day, hours, minutes).getTime();
             SavedImage savedImage = new SavedImage(app.getCapturedImage(), expireDate);
             app.addSavedImage(savedImage);
+            app.saveData();
         }
         Intent intent = new Intent(this, CameraActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);

@@ -3,9 +3,11 @@ package com.jmware.snapshot.util;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +20,7 @@ import android.widget.TextView;
 
 import com.jmware.snapshot.R;
 import com.jmware.snapshot.data.SavedImage;
+import com.jmware.snapshot.manager.ApplicationManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +50,13 @@ public class PhotoGridAdapter extends ArrayAdapter<SavedImage> {
                 onImageClick(savedImage);
             }
         });
+        convertView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                onImageLongClick(savedImage);
+                return true;
+            }
+        });
         return convertView;
     }
 
@@ -72,6 +82,24 @@ public class PhotoGridAdapter extends ArrayAdapter<SavedImage> {
         });
         dialog.show();
         dialog.getWindow().setAttributes(layoutParams);
+    }
+
+    private void onImageLongClick(SavedImage savedImage) {
+        final SavedImage image = savedImage;
+        new AlertDialog.Builder(activity)
+                .setTitle("Snapshot")
+                .setMessage("Delete now?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        ApplicationManager app = (ApplicationManager) activity.getApplication();
+                        app.getSavedImages().remove(image);
+                        notifyDataSetChanged();
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {}
+                })
+                .show();
     }
 
 
