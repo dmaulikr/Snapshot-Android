@@ -13,6 +13,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -41,7 +43,7 @@ public class PhotoGridAdapter extends ArrayAdapter<SavedImage> {
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.grid_item_photo, parent, false);
         }
-        ImageView imageView = convertView.findViewById(R.id.photo_image);
+        final ImageView imageView = convertView.findViewById(R.id.photo_image);
         Bitmap editedImage = formatSquareImage(savedImage.getImage());
         imageView.setImageBitmap(editedImage);
         convertView.setOnClickListener(new View.OnClickListener() {
@@ -53,7 +55,7 @@ public class PhotoGridAdapter extends ArrayAdapter<SavedImage> {
         convertView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                onImageLongClick(savedImage);
+                onImageLongClick(imageView, savedImage);
                 return true;
             }
         });
@@ -84,7 +86,8 @@ public class PhotoGridAdapter extends ArrayAdapter<SavedImage> {
         dialog.getWindow().setAttributes(layoutParams);
     }
 
-    private void onImageLongClick(SavedImage savedImage) {
+    private void onImageLongClick(ImageView view, SavedImage savedImage) {
+        final ImageView imageView = view;
         final SavedImage image = savedImage;
         new AlertDialog.Builder(activity)
                 .setTitle("Snapshot")
@@ -93,6 +96,9 @@ public class PhotoGridAdapter extends ArrayAdapter<SavedImage> {
                     public void onClick(DialogInterface dialog, int id) {
                         ApplicationManager app = (ApplicationManager) activity.getApplication();
                         app.getSavedImages().remove(image);
+                        AlphaAnimation fadeOut = new AlphaAnimation(1.0f, 0.0f);
+                        fadeOut.setDuration(250);
+                        imageView.startAnimation(fadeOut);
                         notifyDataSetChanged();
                     }
                 })
@@ -101,7 +107,6 @@ public class PhotoGridAdapter extends ArrayAdapter<SavedImage> {
                 })
                 .show();
     }
-
 
     private Bitmap formatSquareImage(Bitmap image) {
         int x = 0;
